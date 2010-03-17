@@ -1,0 +1,12 @@
+#
+#  mensabot
+#
+#  Copyright (c) 2010, Daniel Gasienica <daniel@gasienica.ch>
+#  All rights reserved.
+#
+
+cron:
+#- description: update wave
+#  url: /web/cron
+#  schedule: every 1 minutes
+
