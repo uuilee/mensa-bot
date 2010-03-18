@@ -8,6 +8,5 @@
 cron:
 - description: update ETH mensa menu
   url: /web/cron
-  schedule: every day 08:50
+  schedule: every day 06:30
   timezone: Europe/Zurich
-

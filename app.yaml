@@ -5,15 +5,15 @@
 #  All rights reserved.
 #
 
-application: mensa-bot
-version: live
+application: wilee-islab
+version: 1
 runtime: python
 api_version: 1
 
 handlers:
 - url: /_wave/.*
-  script: mensabot.py
+  script: robot.py
 - url: /web/.*
-  script: mensabot.py
+  script: robot.py
 - url: /assets
   static_dir: assets
