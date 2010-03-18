@@ -6,7 +6,8 @@
 #
 
 cron:
-#- description: update wave
-#  url: /web/cron
-#  schedule: every 1 minutes
+- description: update ETH mensa menu
+  url: /web/cron
+  schedule: every day 08:50
+  timezone: Europe/Zurich
 

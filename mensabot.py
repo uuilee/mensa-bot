@@ -13,6 +13,9 @@ from waveapi import robot
 from waveapi import appengine_robot_runner
 
 import credentials
+import feedparser
+
+FEED = "https://www.gastro-app.ethz.ch/cgi-bin/menuela/feed_2.0_en_11-1.xml"
 
 class CronHandler(webapp.RequestHandler):
     robot = None
@@ -23,12 +26,19 @@ class CronHandler(webapp.RequestHandler):
         webapp.RequestHandler.__init__(self)
 
     def get(self):
-        wave = self.robot.new_wave(domain="googlewave.com", participants=["daniel.gasienica@googlewave.com",])
-        wave.title = "Yayaka!"
+        wave = self.robot.new_wave(domain="googlewave.com", participants=["daniel.gasienica@googlewave.com",
+                                                                          "wilee.lai@googlewave.com",
+                                                                          "mklausmann5@googlewave.com"])
+        d = feedparser.parse(FEED)
+        wave.title = d.channel.description
+        
+        for entry in d.entries:
+            wave.reply(entry.title + "\n" + entry.description + "\n\n")
+        
         self.robot.submit(wave)
 
 if __name__ == "__main__":
-    mensabot = robot.Robot("Mensa Bot",
+    mensabot = robot.Robot("ETH Mensa Bot",
                            image_url="http://www.seoish.com/wp-content/uploads/2009/04/wrench.png",
                            profile_url="")
     mensabot.set_verification_token_info(credentials.VERIFICATION_TOKEN, credentials.SECURITY_TOKEN)
