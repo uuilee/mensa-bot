@@ -13,7 +13,7 @@ from waveapi import appengine_robot_runner
 from util import credentials
 from util import feedparser
 
-FEED = "https://www.gastro-app.ethz.ch/cgi-bin/menuela/feed_2.0_en_11-1.xml"
+FEED = 'https://www.gastro-app.ethz.ch/cgi-bin/menuela/feed_2.0_en_11-1.xml'
 
 class CronHandler(webapp.RequestHandler):
     robot = None
@@ -23,15 +23,18 @@ class CronHandler(webapp.RequestHandler):
         webapp.RequestHandler.__init__(self)
 
     def get(self):
-        wave = self.robot.new_wave(domain="googlewave.com", participants=["daniel.gasienica@googlewave.com",
-                                                                          "wilee.lai@googlewave.com",
-                                                                          "mklausmann5@googlewave.com"])
+#        wave = self.robot.new_wave(domain="googlewave.com", participants=['daniel.gasienica@googlewave.com',
+#                                                                          'wilee.lai@googlewave.com',
+#                                                                          'mklausmann5@googlewave.com'])
+        wave = self.robot.new_wave(domain='googlewave.com', participants=['wilee.lai@googlewave.com'])
         d = feedparser.parse(FEED)
         wave.title = d.channel.description
         
         for entry in d.entries:
-            wave.reply(entry.title + "\n" + entry.description + "\n\n")
-        
+            # append markup currently only supports <p>, <div>, <b>, <strong>, <i>, <em>, <u>.
+            wave.root_blip.append("\n")
+            wave.root_blip.append_markup("<p><b>%s</b></p><p>%s</p><p> </p>" % (entry.title, entry.description))
+
         self.robot.submit(wave)
 
 if __name__ == '__main__':
@@ -40,6 +43,6 @@ if __name__ == '__main__':
                           profile_url='http://wilee-python.appspot.com/')
     assisty.set_verification_token_info(credentials.VERIFICATION_TOKEN, credentials.SECURITY_TOKEN)
     assisty.setup_oauth(credentials.CONSUMER_KEY, credentials.CONSUMER_SECRET, server_rpc_base=credentials.RPC_BASE)
-    appengine_robot_runner.run(assisty, debug=True, extra_handlers=[("/web/cron",
+    appengine_robot_runner.run(assisty, debug=True, extra_handlers=[('/web/cron',
                                                                      lambda: CronHandler(assisty))])
 
